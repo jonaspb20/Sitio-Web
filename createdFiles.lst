@@ -1,0 +1,499 @@
+<%@ page contentType="text/html; charset=UTF-8" %>
+<%@ page import="logica.GestorTickets" %>
+<%@ page import="estructura.NodoDoble" %>
+
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Recorrido Inverso</title>
+
+    <!-- ================================================= -->
+    <!-- BOOTSTRAP -->
+    <!-- ================================================= -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+
+    <!-- ================================================= -->
+    <!-- ICONOS -->
+    <!-- ================================================= -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <!-- ================================================= -->
+    <!-- ESTILOS -->
+    <!-- ================================================= -->
+    <style>
+
+        body{
+            background-color:#f4f6f9;
+            overflow-x:hidden;
+        }
+
+        /* =========================================
+           SIDEBAR
+        ========================================= */
+
+        .sidebar{
+
+            width:260px;
+            height:100vh;
+
+            background-color:#111827;
+
+            position:fixed;
+
+            top:0;
+            left:0;
+
+            padding-top:25px;
+
+            box-shadow:2px 0 10px rgba(0,0,0,0.1);
+        }
+
+        .sidebar h2{
+
+            color:white;
+
+            text-align:center;
+
+            margin-bottom:40px;
+
+            font-weight:bold;
+        }
+
+        .sidebar a{
+
+            display:block;
+
+            color:#d1d5db;
+
+            text-decoration:none;
+
+            padding:15px 25px;
+
+            transition:0.3s;
+        }
+
+        .sidebar a:hover{
+
+            background-color:#1f2937;
+
+            color:white;
+
+            padding-left:35px;
+        }
+
+        .activo{
+
+            background-color:#2563eb;
+
+            color:white !important;
+        }
+
+        /* =========================================
+           CONTENIDO
+        ========================================= */
+
+        .contenido{
+
+            margin-left:260px;
+
+            padding:35px;
+        }
+
+        .titulo{
+
+            font-weight:bold;
+
+            color:#111827;
+        }
+
+        /* =========================================
+           TIMELINE
+        ========================================= */
+
+        .timeline{
+
+            position:relative;
+
+            margin-top:40px;
+        }
+
+        .timeline::before{
+
+            content:"";
+
+            position:absolute;
+
+            left:30px;
+
+            top:0;
+
+            width:4px;
+
+            height:100%;
+
+            background:#2563eb;
+        }
+
+        .timeline-item{
+
+            position:relative;
+
+            margin-bottom:35px;
+
+            padding-left:80px;
+        }
+
+        .timeline-icon{
+
+            position:absolute;
+
+            left:12px;
+
+            top:5px;
+
+            width:40px;
+
+            height:40px;
+
+            background:#2563eb;
+
+            border-radius:50%;
+
+            display:flex;
+
+            align-items:center;
+
+            justify-content:center;
+
+            color:white;
+
+            font-size:18px;
+
+            font-weight:bold;
+
+            z-index:10;
+        }
+
+        .timeline-card{
+
+            background:white;
+
+            border-radius:15px;
+
+            padding:25px;
+
+            box-shadow:0 4px 10px rgba(0,0,0,0.08);
+
+            transition:0.3s;
+        }
+
+        .timeline-card:hover{
+
+            transform:translateY(-5px);
+        }
+
+        .badge-custom{
+
+            background-color:#111827;
+
+            color:white;
+
+            font-size:13px;
+
+            padding:8px 12px;
+
+            border-radius:8px;
+        }
+
+        .descripcion{
+
+            color:#6b7280;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<%
+    GestorTickets gestor =
+            (GestorTickets) application.getAttribute("gestor");
+%>
+
+<!-- =========================================
+     SIDEBAR
+========================================= -->
+
+<div class="sidebar">
+
+    <h2>
+        Sistema Vuelos
+    </h2>
+
+    <a href="${pageContext.request.contextPath}/views/menu.jsp">
+
+        <i class="bi bi-speedometer2"></i>
+
+        Panel Principal
+
+    </a>
+
+    <a href="${pageContext.request.contextPath}/tickets">
+
+        <i class="bi bi-ticket-perforated"></i>
+
+        Gestión Tickets
+
+    </a>
+
+    <a class="activo"
+       href="${pageContext.request.contextPath}/views/recorridoInverso.jsp">
+
+        <i class="bi bi-arrow-left-right"></i>
+
+        Recorrido Inverso
+
+    </a>
+
+    <a href="${pageContext.request.contextPath}/descargar">
+
+        <i class="bi bi-download"></i>
+
+        Descargar TXT
+
+    </a>
+
+</div>
+
+<!-- =========================================
+     CONTENIDO
+========================================= -->
+
+<div class="contenido">
+
+    <!-- =====================================
+         TITULO
+    ====================================== -->
+
+    <div class="mb-5">
+
+        <h1 class="titulo">
+
+            Recorrido Inverso de Tickets
+
+        </h1>
+
+        <p class="descripcion">
+
+            Esta vista representa el recorrido inverso
+            de una lista doblemente enlazada utilizando
+            el puntero <strong>anterior</strong> desde
+            la cola hasta la cabeza.
+
+        </p>
+
+    </div>
+
+    <!-- =====================================
+         PANEL INFORMATIVO
+    ====================================== -->
+
+    <div class="card border-0 shadow-sm p-4 mb-5">
+
+        <div class="row">
+
+            <div class="col-md-4">
+
+                <h5>
+
+                    <i class="bi bi-diagram-3"></i>
+
+                    Estructura
+
+                </h5>
+
+                <p class="text-muted">
+
+                    Lista doblemente enlazada.
+
+                </p>
+
+            </div>
+
+            <div class="col-md-4">
+
+                <h5>
+
+                    <i class="bi bi-arrow-repeat"></i>
+
+                    Recorrido
+
+                </h5>
+
+                <p class="text-muted">
+
+                    Desde cola hacia cabeza.
+
+                </p>
+
+            </div>
+
+            <div class="col-md-4">
+
+                <h5>
+
+                    <i class="bi bi-code-slash"></i>
+
+                    Implementación
+
+                </h5>
+
+                <p class="text-muted">
+
+                    Uso del nodo anterior.
+
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- =====================================
+         TIMELINE INVERSA
+    ====================================== -->
+
+    <div class="timeline">
+
+    <%
+        if (gestor != null &&
+            gestor.getLista() != null &&
+            gestor.getLista().getCola() != null) {
+
+            NodoDoble actual =
+                    gestor.getLista().getCola();
+
+            int contador = 1;
+
+            while (actual != null) {
+    %>
+
+        <!-- =================================
+             ITEM TIMELINE
+        ================================== -->
+
+        <div class="timeline-item">
+
+            <!-- ICONO -->
+            <div class="timeline-icon">
+
+                <%= contador %>
+
+            </div>
+
+            <!-- CARD -->
+            <div class="timeline-card">
+
+                <div class="d-flex justify-content-between mb-3">
+
+                    <h4>
+
+                        Ticket:
+                        <%= actual.dato.getId() %>
+
+                    </h4>
+
+                    <span class="badge-custom">
+
+                        Nodo Inverso
+
+                    </span>
+
+                </div>
+
+                <div class="row">
+
+                    <div class="col-md-4">
+
+                        <p>
+
+                            <strong>Pasajero:</strong>
+
+                            <br>
+
+                            <%= actual.dato.getPasajero() %>
+
+                        </p>
+
+                    </div>
+
+                    <div class="col-md-4">
+
+                        <p>
+
+                            <strong>Origen:</strong>
+
+                            <br>
+
+                            <%= actual.dato.getOrigen() %>
+
+                        </p>
+
+                    </div>
+
+                    <div class="col-md-4">
+
+                        <p>
+
+                            <strong>Destino:</strong>
+
+                            <br>
+
+                            <%= actual.dato.getDestino() %>
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    <%
+                actual = actual.anterior;
+
+                contador++;
+            }
+
+        } else {
+    %>
+
+        <!-- =================================
+             SIN DATOS
+        ================================== -->
+
+        <div class="alert alert-secondary">
+
+            No existen tickets registrados
+            para realizar el recorrido inverso.
+
+        </div>
+
+    <%
+        }
+    %>
+
+    </div>
+
+</div>
+
+</body>
+</html>

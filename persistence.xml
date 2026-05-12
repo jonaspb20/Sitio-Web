@@ -1,0 +1,217 @@
+package logica;
+
+import estructura.ListaDoble;
+import modelo.Ticket;
+
+/**
+ * =========================================================
+ * CLASE: GestorTickets
+ * ---------------------------------------------------------
+ * Encargada de administrar todas las operaciones
+ * relacionadas con los tickets del sistema.
+ *
+ * FUNCIONES PRINCIPALES:
+ * - Agregar tickets
+ * - Buscar tickets
+ * - Editar tickets
+ * - Eliminar tickets
+ * - Validar existencia de datos
+ * - Gestionar la lista doblemente enlazada
+ * =========================================================
+ */
+public class GestorTickets {
+
+    // =====================================================
+    // ATRIBUTO PRINCIPAL
+    // =====================================================
+
+    /**
+     * Lista doblemente enlazada donde se almacenan
+     * todos los tickets del sistema.
+     */
+    private ListaDoble lista;
+
+    // =====================================================
+    // CONSTRUCTOR
+    // =====================================================
+
+    /**
+     * Inicializa la estructura de datos.
+     */
+    public GestorTickets() {
+        lista = new ListaDoble();
+    }
+
+    // =====================================================
+    // MÉTODOS DE REGISTRO
+    // =====================================================
+
+    /**
+     * Agrega un ticket al inicio de la lista.
+     *
+     * @param ticket Ticket a registrar
+     */
+    public void agregarInicio(Ticket ticket) {
+
+        if (ticket != null) {
+            lista.insertarInicio(ticket);
+        }
+    }
+
+    /**
+     * Agrega un ticket al final de la lista.
+     *
+     * @param ticket Ticket a registrar
+     */
+    public void agregarFinal(Ticket ticket) {
+
+        if (ticket != null) {
+            lista.insertarFinal(ticket);
+        }
+    }
+
+    // =====================================================
+    // MÉTODOS DE BÚSQUEDA
+    // =====================================================
+
+    /**
+     * Busca un ticket utilizando el ID.
+     *
+     * @param id Identificador del ticket
+     * @return Ticket encontrado o null
+     */
+    public Ticket buscarPorId(String id) {
+
+        // VALIDAR ID
+        if (id == null || id.trim().isEmpty()) {
+            return null;
+        }
+
+        // BUSCAR EN LA LISTA
+        return lista.buscarPorId(id);
+    }
+
+    /**
+     * Verifica si un ticket existe en el sistema.
+     *
+     * @param id Identificador del ticket
+     * @return true si existe
+     */
+    public boolean existeTicket(String id) {
+
+        return buscarPorId(id) != null;
+    }
+
+    // =====================================================
+    // MÉTODOS DE EDICIÓN
+    // =====================================================
+
+    /**
+     * Actualiza la información de un ticket.
+     *
+     * @param id ID del ticket
+     * @param pasajero Nuevo pasajero
+     * @param origen Nuevo origen
+     * @param destino Nuevo destino
+     * @return true si la edición fue exitosa
+     */
+    public boolean editarTicket(String id,
+                                String pasajero,
+                                String origen,
+                                String destino) {
+
+        // BUSCAR TICKET
+        Ticket ticket = buscarPorId(id);
+
+        // VALIDAR EXISTENCIA
+        if (ticket != null) {
+
+            ticket.setPasajero(pasajero);
+            ticket.setOrigen(origen);
+            ticket.setDestino(destino);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    // =====================================================
+    // MÉTODOS DE ELIMINACIÓN
+    // =====================================================
+
+    /**
+     * Elimina un ticket por ID.
+     *
+     * @param id Identificador del ticket
+     * @return true si fue eliminado
+     */
+    public boolean eliminar(String id) {
+
+        // VALIDAR ID
+        if (id == null || id.trim().isEmpty()) {
+            return false;
+        }
+
+        return lista.eliminarPorId(id);
+    }
+
+    // =====================================================
+    // MÉTODOS DE CONTROL
+    // =====================================================
+
+    /**
+     * Elimina todos los tickets almacenados.
+     */
+    public void limpiarTickets() {
+        lista.limpiar();
+    }
+
+    /**
+     * Verifica si existen tickets registrados.
+     *
+     * @return true si la lista tiene elementos
+     */
+    public boolean hayTickets() {
+        return !lista.estaVacia();
+    }
+
+    /**
+     * Obtiene la cantidad total de tickets.
+     *
+     * @return número de tickets registrados
+     */
+    public int totalTickets() {
+        return lista.contarNodos();
+    }
+
+    // =====================================================
+    // GETTERS Y SETTERS
+    // =====================================================
+
+    /**
+     * Retorna la lista completa de tickets.
+     *
+     * @return ListaDoble
+     */
+    public ListaDoble getLista() {
+        return lista;
+    }
+
+    /**
+     * Reemplaza la lista actual.
+     *
+     * @param lista Nueva lista
+     */
+    public void setLista(ListaDoble lista) {
+        this.lista = lista;
+    }
+    
+    // =====================================================
+// VALIDAR SI EXISTE UN ID
+// =====================================================
+public boolean existeId(String id) {
+
+    return buscarPorId(id) != null;
+}
+}

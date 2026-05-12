@@ -1,0 +1,779 @@
+<%@ page contentType="text/html; charset=UTF-8" %>
+<%@ page import="logica.GestorTickets" %>
+<%@ page import="estructura.NodoDoble" %>
+
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Dashboard - Sistema de Tickets</title>
+
+    <!-- GOOGLE FONTS -->
+
+    <link rel="preconnect"
+          href="https://fonts.googleapis.com">
+
+    <link rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+          rel="stylesheet">
+
+    <!-- BOOTSTRAP -->
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+
+    <!-- ICONOS -->
+
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+
+    background:#0a0a0a;
+
+    font-family:'Poppins',sans-serif;
+
+    color:#f5f5f5;
+
+    overflow-x:hidden;
+}
+
+/* ===================================
+   SCROLLBAR
+=================================== */
+
+::-webkit-scrollbar{
+    width:10px;
+}
+
+::-webkit-scrollbar-track{
+    background:#111111;
+}
+
+::-webkit-scrollbar-thumb{
+    background:#2a2a2a;
+    border-radius:10px;
+}
+
+/* ===================================
+   SIDEBAR
+=================================== */
+
+.sidebar{
+
+    position:fixed;
+
+    top:0;
+    left:0;
+
+    width:270px;
+
+    height:100vh;
+
+    background:linear-gradient(
+            180deg,
+            #111111,
+            #181818
+    );
+
+    padding-top:30px;
+
+    border-right:1px solid #2a2a2a;
+
+    box-shadow:4px 0 25px rgba(0,0,0,0.45);
+
+    z-index:1000;
+}
+
+.logo-area{
+
+    text-align:center;
+
+    margin-bottom:45px;
+}
+
+.logo-circle{
+
+    width:90px;
+    height:90px;
+
+    margin:auto;
+
+    border-radius:50%;
+
+    background:linear-gradient(
+            135deg,
+            #d4af37,
+            #f5d76e
+    );
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    margin-bottom:18px;
+
+    box-shadow:0 10px 30px rgba(212,175,55,0.35);
+}
+
+.logo-circle i{
+
+    font-size:40px;
+
+    color:#111111;
+}
+
+.logo-area h3{
+
+    color:#f5f5f5;
+
+    font-weight:600;
+
+    margin-bottom:5px;
+}
+
+.logo-area small{
+
+    color:#9ca3af;
+
+    letter-spacing:1px;
+
+    font-size:12px;
+}
+
+/* ===================================
+   MENU
+=================================== */
+
+.sidebar a{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:14px;
+
+    color:#b0b0b0;
+
+    padding:16px 28px;
+
+    text-decoration:none;
+
+    transition:0.3s;
+
+    font-weight:500;
+
+    border-left:3px solid transparent;
+}
+
+.sidebar a:hover{
+
+    background:#1f1f1f;
+
+    color:#d4af37;
+
+    border-left:3px solid #d4af37;
+
+    padding-left:35px;
+}
+
+.sidebar .active{
+
+    background:#1f1f1f;
+
+    color:#d4af37;
+
+    border-left:3px solid #d4af37;
+}
+
+/* ===================================
+   MAIN
+=================================== */
+
+.main{
+
+    margin-left:290px;
+
+    padding:35px;
+}
+
+/* ===================================
+   TOPBAR
+=================================== */
+
+.topbar{
+
+    background:rgba(255,255,255,0.04);
+
+    backdrop-filter:blur(14px);
+
+    padding:28px;
+
+    border-radius:24px;
+
+    border:1px solid rgba(255,255,255,0.06);
+
+    box-shadow:0 10px 35px rgba(0,0,0,0.35);
+
+    margin-bottom:35px;
+}
+
+.titulo{
+
+    font-weight:700;
+
+    color:#f5f5f5;
+}
+
+.subtitulo{
+
+    color:#9ca3af;
+}
+
+/* ===================================
+   CARDS
+=================================== */
+
+.dashboard-card{
+
+    background:rgba(255,255,255,0.04);
+
+    backdrop-filter:blur(12px);
+
+    border-radius:24px;
+
+    padding:30px;
+
+    border:1px solid rgba(255,255,255,0.05);
+
+    box-shadow:0 10px 35px rgba(0,0,0,0.35);
+
+    transition:0.35s;
+
+    height:100%;
+}
+
+.dashboard-card:hover{
+
+    transform:translateY(-6px);
+
+    border:1px solid rgba(212,175,55,0.18);
+}
+
+.dashboard-card h5{
+
+    color:#9ca3af;
+
+    margin-bottom:20px;
+
+    font-size:16px;
+}
+
+.numero{
+
+    font-size:45px;
+
+    font-weight:700;
+}
+
+.icono-card{
+
+    width:65px;
+    height:65px;
+
+    border-radius:18px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:28px;
+
+    margin-bottom:20px;
+}
+
+.bg-azul{
+    background:rgba(56,189,248,0.15);
+    color:#38bdf8;
+}
+
+.bg-verde{
+    background:rgba(34,197,94,0.15);
+    color:#22c55e;
+}
+
+.bg-rojo{
+    background:rgba(239,68,68,0.15);
+    color:#ef4444;
+}
+
+.bg-dorado{
+    background:rgba(212,175,55,0.15);
+    color:#d4af37;
+}
+
+/* ===================================
+   INFO PANEL
+=================================== */
+
+.info-panel{
+
+    margin-top:35px;
+
+    background:rgba(255,255,255,0.04);
+
+    border-radius:24px;
+
+    padding:35px;
+
+    border:1px solid rgba(255,255,255,0.05);
+
+    box-shadow:0 10px 35px rgba(0,0,0,0.35);
+}
+
+.info-panel h4{
+
+    margin-bottom:20px;
+
+    font-weight:600;
+}
+
+.info-panel p{
+
+    color:#cbd5e1;
+
+    line-height:1.9;
+}
+
+/* ===================================
+   BOTONES
+=================================== */
+
+.btn-premium{
+
+    background:#d4af37;
+
+    color:#111111;
+
+    border:none;
+
+    padding:14px 25px;
+
+    border-radius:14px;
+
+    font-weight:600;
+
+    transition:0.3s;
+
+    text-decoration:none;
+
+    display:inline-flex;
+
+    align-items:center;
+
+    gap:10px;
+}
+
+.btn-premium:hover{
+
+    background:#f5d76e;
+
+    color:#111111;
+
+    transform:translateY(-2px);
+}
+
+/* ===================================
+   RESPONSIVE
+=================================== */
+
+@media(max-width:991px){
+
+    .sidebar{
+
+        position:relative;
+
+        width:100%;
+
+        height:auto;
+    }
+
+    .main{
+
+        margin-left:0;
+    }
+}
+
+</style>
+
+</head>
+
+<body>
+
+<%
+
+    GestorTickets gestor =
+            (GestorTickets) application.getAttribute("gestor");
+
+    int totalTickets = 0;
+
+    String primerTicket = "Sin registros";
+
+    String ultimoTicket = "Sin registros";
+
+    boolean listaVacia = true;
+
+    if (gestor != null &&
+        gestor.getLista() != null) {
+
+        listaVacia =
+                gestor.getLista().estaVacia();
+
+        NodoDoble actual =
+                gestor.getLista().getCabeza();
+
+        while(actual != null){
+
+            totalTickets++;
+
+            actual = actual.siguiente;
+        }
+
+        if(!listaVacia){
+
+            primerTicket =
+                    gestor.getLista()
+                          .obtenerPrimerTicket()
+                          .getId();
+
+            ultimoTicket =
+                    gestor.getLista()
+                          .obtenerUltimoTicket()
+                          .getId();
+        }
+    }
+
+%>
+
+<!-- ===================================
+     SIDEBAR
+=================================== -->
+
+<div class="sidebar">
+
+    <div class="logo-area">
+
+        <div class="logo-circle">
+
+            <i class="bi bi-airplane-fill"></i>
+
+        </div>
+
+        <h3>
+            SkyManager
+        </h3>
+
+        <small>
+            PREMIUM FLIGHT SYSTEM
+        </small>
+
+    </div>
+
+    <a href="dashboard.jsp"
+       class="active">
+
+        <i class="bi bi-speedometer2"></i>
+
+        Dashboard
+
+    </a>
+
+    <a href="tickets.jsp">
+
+        <i class="bi bi-ticket-detailed-fill"></i>
+
+        Tickets
+
+    </a>
+
+    <a href="recorridoInverso.jsp">
+
+        <i class="bi bi-arrow-left-right"></i>
+
+        Recorrido Inverso
+
+    </a>
+
+    <a href="archivos.jsp">
+
+        <i class="bi bi-file-earmark-text-fill"></i>
+
+        Archivos
+
+    </a>
+
+    <a href="reportes.jsp">
+
+        <i class="bi bi-bar-chart-fill"></i>
+
+        Reportes
+
+    </a>
+
+</div>
+
+<!-- ===================================
+     MAIN
+=================================== -->
+
+<div class="main">
+
+    <!-- TOPBAR -->
+
+    <div class="topbar d-flex justify-content-between align-items-center">
+
+        <div>
+
+            <h3 class="titulo mb-1">
+
+                Dashboard Administrativo
+
+            </h3>
+
+            <small class="subtitulo">
+
+                Sistema inteligente de gestión aérea
+
+            </small>
+
+        </div>
+
+        <div>
+
+            <span class="badge bg-primary p-3">
+
+                <i class="bi bi-database-fill"></i>
+
+                Persistencia TXT
+
+            </span>
+
+        </div>
+
+    </div>
+
+    <!-- TITULO -->
+
+    <div class="mb-5">
+
+        <h1 class="titulo display-5 mb-3">
+
+            Panel Principal del Sistema
+
+        </h1>
+
+        <p class="subtitulo">
+
+            Control y administración completa
+            de tickets mediante listas doblemente enlazadas.
+
+        </p>
+
+    </div>
+
+    <!-- CARDS -->
+
+    <div class="row g-4">
+
+        <!-- TOTAL -->
+
+        <div class="col-md-6 col-xl-3">
+
+            <div class="dashboard-card">
+
+                <div class="icono-card bg-azul">
+
+                    <i class="bi bi-ticket-perforated-fill"></i>
+
+                </div>
+
+                <h5>
+                    Total Tickets
+                </h5>
+
+                <div class="numero text-primary">
+
+                    <%= totalTickets %>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- PRIMER -->
+
+        <div class="col-md-6 col-xl-3">
+
+            <div class="dashboard-card">
+
+                <div class="icono-card bg-verde">
+
+                    <i class="bi bi-arrow-down-circle-fill"></i>
+
+                </div>
+
+                <h5>
+                    Primer Ticket
+                </h5>
+
+                <div class="fs-3 fw-bold">
+
+                    <%= primerTicket %>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ULTIMO -->
+
+        <div class="col-md-6 col-xl-3">
+
+            <div class="dashboard-card">
+
+                <div class="icono-card bg-rojo">
+
+                    <i class="bi bi-arrow-up-circle-fill"></i>
+
+                </div>
+
+                <h5>
+                    Último Ticket
+                </h5>
+
+                <div class="fs-3 fw-bold">
+
+                    <%= ultimoTicket %>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ESTADO -->
+
+        <div class="col-md-6 col-xl-3">
+
+            <div class="dashboard-card">
+
+                <div class="icono-card bg-dorado">
+
+                    <i class="bi bi-diagram-3-fill"></i>
+
+                </div>
+
+                <h5>
+                    Estado Lista
+                </h5>
+
+                <div class="fs-3 fw-bold">
+
+                    <%
+                        if(listaVacia){
+                    %>
+
+                        Vacía
+
+                    <%
+                        } else {
+                    %>
+
+                        Activa
+
+                    <%
+                        }
+                    %>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- PANEL INFO -->
+
+    <div class="info-panel">
+
+        <h4>
+
+            <i class="bi bi-info-circle-fill text-warning"></i>
+
+            Información del Sistema
+
+        </h4>
+
+        <p>
+
+            Este sistema administra tickets aéreos
+            utilizando estructuras dinámicas en Java Web,
+            implementadas mediante listas doblemente enlazadas.
+            Permite registrar, editar, eliminar y recorrer
+            tickets tanto desde la cabeza como desde la cola,
+            incluyendo persistencia de datos mediante archivos TXT.
+
+        </p>
+
+        <div class="mt-4 d-flex gap-3 flex-wrap">
+
+            <a href="tickets.jsp"
+               class="btn-premium">
+
+                <i class="bi bi-ticket-detailed-fill"></i>
+
+                Gestionar Tickets
+
+            </a>
+
+            <a href="recorridoInverso.jsp"
+               class="btn-premium">
+
+                <i class="bi bi-arrow-left-right"></i>
+
+                Ver Recorrido
+
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

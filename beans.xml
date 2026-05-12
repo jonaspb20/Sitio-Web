@@ -1,0 +1,347 @@
+package servlet;
+
+import logica.GestorTickets;
+import modelo.Ticket;
+import persistencia.ArchivoManager;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.*;
+
+import java.io.IOException;
+
+/**
+ * =========================================================
+ * SERVLET PRINCIPAL DEL SISTEMA DE TICKETS
+ * ---------------------------------------------------------
+ * FUNCIONALIDADES:
+ * - Agregar tickets
+ * - Editar tickets
+ * - Eliminar tickets
+ * - Buscar tickets
+ * - Validar IDs duplicados
+ * - Validar campos vacíos
+ * - Cargar persistencia TXT
+ * - Guardar persistencia TXT
+ * =========================================================
+ */
+
+@WebServlet("/tickets")
+public class TicketServlet extends HttpServlet {
+
+    // =====================================================
+    // ATRIBUTOS
+    // =====================================================
+
+    /**
+     * Gestor principal del sistema.
+     */
+    private GestorTickets gestor;
+
+    /**
+     * Administrador de persistencia TXT.
+     */
+    private ArchivoManager archivo;
+
+    // =====================================================
+    // MÉTODO INIT
+    // SE EJECUTA AL INICIAR EL SERVLET
+    // =====================================================
+
+    @Override
+    public void init() {
+
+        // CREAR INSTANCIAS
+        gestor = new GestorTickets();
+
+        archivo = new ArchivoManager();
+
+        try {
+
+            // LIMPIAR LISTA
+            gestor.getLista().limpiar();
+
+            // CARGAR ARCHIVO TXT
+            archivo.cargar(gestor.getLista());
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
+
+        // ENVIAR GESTOR A TODA LA APLICACIÓN
+        getServletContext().setAttribute(
+                "gestor",
+                gestor
+        );
+    }
+
+    // =====================================================
+    // MÉTODO POST
+    // GESTIONA:
+    // - AGREGAR
+    // - EDITAR
+    // - ELIMINAR
+    // =====================================================
+
+    @Override
+    protected void doPost(HttpServletRequest request,
+                          HttpServletResponse response)
+            throws ServletException, IOException {
+
+        // =================================================
+        // OBTENER ACCIÓN
+        // =================================================
+
+        String accion =
+                request.getParameter("accion");
+
+        // =================================================
+        // AGREGAR TICKET
+        // =================================================
+
+        if ("agregar".equals(accion)) {
+
+            // OBTENER DATOS
+            String id =
+                    request.getParameter("id").trim();
+
+            String pasajero =
+                    request.getParameter("pasajero").trim();
+
+            String origen =
+                    request.getParameter("origen").trim();
+
+            String destino =
+                    request.getParameter("destino").trim();
+
+            // =============================================
+            // VALIDAR CAMPOS VACÍOS
+            // =============================================
+
+            if (id.isEmpty() ||
+                pasajero.isEmpty() ||
+                origen.isEmpty() ||
+                destino.isEmpty()) {
+
+                response.sendRedirect(
+                        request.getContextPath()
+                        + "/tickets?msg=vacio"
+                );
+
+                return;
+            }
+
+            // =============================================
+            // VALIDAR ID DUPLICADO
+            // =============================================
+
+            if (gestor.existeId(id)) {
+
+                response.sendRedirect(
+                        request.getContextPath()
+                        + "/tickets?msg=duplicado"
+                );
+
+                return;
+            }
+
+            // =============================================
+            // CREAR TICKET
+            // =============================================
+
+            Ticket ticket = new Ticket(
+                    id,
+                    pasajero,
+                    origen,
+                    destino
+            );
+
+            // =============================================
+            // AGREGAR A LA LISTA
+            // =============================================
+
+            gestor.agregarFinal(ticket);
+
+            // =============================================
+            // GUARDAR EN TXT
+            // =============================================
+
+            archivo.guardar(
+                    gestor.getLista()
+            );
+
+            // =============================================
+            // REDIRECCIONAR
+            // =============================================
+
+            response.sendRedirect(
+                    request.getContextPath()
+                    + "/tickets?msg=agregado"
+            );
+        }
+
+        // =================================================
+        // EDITAR TICKET
+        // =================================================
+
+        else if ("editar".equals(accion)) {
+
+            // OBTENER DATOS
+            String id =
+                    request.getParameter("id").trim();
+
+            String pasajero =
+                    request.getParameter("pasajero").trim();
+
+            String origen =
+                    request.getParameter("origen").trim();
+
+            String destino =
+                    request.getParameter("destino").trim();
+
+            // =============================================
+            // VALIDAR CAMPOS VACÍOS
+            // =============================================
+
+            if (pasajero.isEmpty() ||
+                origen.isEmpty() ||
+                destino.isEmpty()) {
+
+                response.sendRedirect(
+                        request.getContextPath()
+                        + "/tickets?msg=vacio"
+                );
+
+                return;
+            }
+
+            // =============================================
+            // EDITAR INFORMACIÓN
+            // =============================================
+
+            boolean editado =
+                    gestor.editarTicket(
+                            id,
+                            pasajero,
+                            origen,
+                            destino
+                    );
+
+            // =============================================
+            // VALIDAR EDICIÓN
+            // =============================================
+
+            if (editado) {
+
+                // ACTUALIZAR TXT
+                archivo.guardar(
+                        gestor.getLista()
+                );
+
+                response.sendRedirect(
+                        request.getContextPath()
+                        + "/tickets?msg=editado"
+                );
+
+            } else {
+
+                response.sendRedirect(
+                        request.getContextPath()
+                        + "/tickets?msg=noeditado"
+                );
+            }
+        }
+
+        // =================================================
+        // ELIMINAR TICKET
+        // =================================================
+
+        else if ("eliminar".equals(accion)) {
+
+            // OBTENER ID
+            String id =
+                    request.getParameter("id");
+
+            // =============================================
+            // ELIMINAR TICKET
+            // =============================================
+
+            boolean eliminado =
+                    gestor.eliminar(id);
+
+            // =============================================
+            // VALIDAR ELIMINACIÓN
+            // =============================================
+
+            if (eliminado) {
+
+                // ACTUALIZAR TXT
+                archivo.guardar(
+                        gestor.getLista()
+                );
+
+                response.sendRedirect(
+                        request.getContextPath()
+                        + "/tickets?msg=eliminado"
+                );
+
+            } else {
+
+                response.sendRedirect(
+                        request.getContextPath()
+                        + "/tickets?msg=noeliminado"
+                );
+            }
+        }
+    }
+
+    // =====================================================
+    // MÉTODO GET
+    // GESTIONA:
+    // - MOSTRAR PÁGINA
+    // - BUSCAR TICKETS
+    // =====================================================
+
+    @Override
+    protected void doGet(HttpServletRequest request,
+                         HttpServletResponse response)
+            throws ServletException, IOException {
+
+        // =================================================
+        // OBTENER ACCIÓN
+        // =================================================
+
+        String accion =
+                request.getParameter("accion");
+
+        // =================================================
+        // BUSCAR TICKET
+        // =================================================
+
+        if ("buscar".equals(accion)) {
+
+            // OBTENER ID
+            String id =
+                    request.getParameter("idBuscar");
+
+            // BUSCAR TICKET
+            Ticket ticketEncontrado =
+                    gestor.buscarPorId(id);
+
+            // ENVIAR RESULTADO AL JSP
+            request.setAttribute(
+                    "ticketBuscado",
+                    ticketEncontrado
+            );
+        }
+
+        // =================================================
+        // MOSTRAR JSP
+        // =================================================
+
+        request.getRequestDispatcher(
+                "/views/tickets.jsp"
+        ).forward(request, response);
+    }
+}
