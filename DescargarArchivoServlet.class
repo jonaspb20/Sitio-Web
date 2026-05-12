@@ -1,0 +1,294 @@
+<%@ page contentType="text/html; charset=UTF-8" %>
+<%@ page import="logica.GestorTickets" %>
+<%@ page import="estructura.NodoDoble" %>
+
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Dashboard</title>
+
+    <!-- BOOTSTRAP -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+
+    <!-- ICONOS -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <style>
+
+        body{
+            background:#eef2f7;
+            font-family:Arial;
+        }
+
+        /* SIDEBAR */
+
+        .sidebar{
+
+            position:fixed;
+
+            width:250px;
+            height:100vh;
+
+            background:#1e293b;
+
+            padding-top:20px;
+        }
+
+        .sidebar h3{
+
+            color:white;
+            text-align:center;
+            margin-bottom:30px;
+        }
+
+        .sidebar a{
+
+            display:block;
+
+            color:#cbd5e1;
+
+            padding:15px 25px;
+
+            text-decoration:none;
+
+            transition:0.3s;
+        }
+
+        .sidebar a:hover{
+
+            background:#334155;
+            color:white;
+        }
+
+        /* CONTENIDO */
+
+        .main{
+
+            margin-left:260px;
+            padding:30px;
+        }
+
+        /* TOPBAR */
+
+        .topbar{
+
+            background:white;
+
+            padding:20px;
+
+            border-radius:12px;
+
+            margin-bottom:25px;
+
+            box-shadow:0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        /* CARDS */
+
+        .card-dashboard{
+
+            border:none;
+
+            border-radius:16px;
+
+            padding:25px;
+
+            background:white;
+
+            box-shadow:0 2px 10px rgba(0,0,0,0.08);
+        }
+
+        .numero{
+
+            font-size:35px;
+            font-weight:bold;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<%
+    GestorTickets gestor =
+            (GestorTickets) application.getAttribute("gestor");
+
+    int totalTickets = 0;
+
+    if (gestor != null &&
+        gestor.getLista() != null &&
+        gestor.getLista().getCabeza() != null) {
+
+        NodoDoble actual =
+                gestor.getLista().getCabeza();
+
+        while (actual != null) {
+
+            totalTickets++;
+
+            actual = actual.siguiente;
+        }
+    }
+%>
+
+<!-- SIDEBAR -->
+
+<div class="sidebar">
+
+    <h3>
+        <i class="bi bi-airplane"></i>
+        Sistema
+    </h3>
+
+    <a href="dashboard.jsp">
+        <i class="bi bi-speedometer2"></i>
+        Dashboard
+    </a>
+
+    <a href="tickets.jsp">
+        <i class="bi bi-ticket-detailed"></i>
+        Tickets
+    </a>
+
+    <a href="recorridoInverso.jsp">
+        <i class="bi bi-arrow-left-right"></i>
+        Recorrido Inverso
+    </a>
+
+    <a href="archivos.jsp">
+        <i class="bi bi-file-earmark-text"></i>
+        Archivos
+    </a>
+
+    <a href="reportes.jsp">
+        <i class="bi bi-bar-chart"></i>
+        Reportes
+    </a>
+
+</div>
+
+<!-- CONTENIDO -->
+
+<div class="main">
+
+    <!-- TOPBAR -->
+
+    <div class="topbar d-flex justify-content-between">
+
+        <div>
+
+            <h3>
+                Dashboard Administrativo
+            </h3>
+
+            <small class="text-muted">
+                Sistema de Gestión de Tickets
+            </small>
+
+        </div>
+
+        <div>
+
+            <span class="badge bg-primary p-2">
+
+                Lista Doblemente Enlazada
+
+            </span>
+
+        </div>
+
+    </div>
+
+    <!-- CARDS -->
+
+    <div class="row">
+
+        <!-- TOTAL TICKETS -->
+
+        <div class="col-md-4 mb-4">
+
+            <div class="card-dashboard">
+
+                <h5>
+                    Total Tickets
+                </h5>
+
+                <div class="numero text-primary">
+
+                    <%= totalTickets %>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- PERSISTENCIA -->
+
+        <div class="col-md-4 mb-4">
+
+            <div class="card-dashboard">
+
+                <h5>
+                    Persistencia
+                </h5>
+
+                <div class="numero text-success">
+
+                    TXT
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ESTRUCTURA -->
+
+        <div class="col-md-4 mb-4">
+
+            <div class="card-dashboard">
+
+                <h5>
+                    Estructura
+                </h5>
+
+                <div class="numero text-danger">
+
+                    Lista Doble
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- INFORMACIÓN -->
+
+    <div class="card-dashboard">
+
+        <h4 class="mb-3">
+            Información del Sistema
+        </h4>
+
+        <p>
+
+            Este sistema administra tickets de vuelos mediante
+            estructuras de datos dinámicas utilizando una
+            lista doblemente enlazada desarrollada en Java Web.
+
+        </p>
+
+    </div>
+
+</div>
+
+</body>
+</html>

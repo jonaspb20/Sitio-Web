@@ -1,506 +1,240 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
-<%@ page import="logica.GestorTickets" %>
-<%@ page import="modelo.Ticket" %>
 
 <!DOCTYPE html>
 <html lang="es">
 
 <head>
-
     <meta charset="UTF-8">
+    <title>Login | SistemaVuelos</title>
 
-    <title>Editar Ticket | SkyManager</title>
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- ========================================= -->
-    <!-- GOOGLE FONTS -->
-    <!-- ========================================= -->
-
-    <link rel="preconnect"
-          href="https://fonts.googleapis.com">
-
-    <link rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossorigin>
-
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
-          rel="stylesheet">
-
-    <!-- ========================================= -->
-    <!-- BOOTSTRAP -->
-    <!-- ========================================= -->
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-          rel="stylesheet">
-
-    <!-- ========================================= -->
-    <!-- ICONOS -->
-    <!-- ========================================= -->
-
+    <!-- Bootstrap Icons -->
     <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-
-    <!-- ========================================= -->
-    <!-- ESTILOS -->
-    <!-- ========================================= -->
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 
     <style>
 
-        *{
-            margin:0;
-            padding:0;
-            box-sizing:border-box;
-        }
-
         body{
+            margin: 0;
+            padding: 0;
+            height: 100vh;
 
-            background:
-                radial-gradient(circle at top left,
-                rgba(212,175,55,0.10),
-                transparent 25%),
+            background: linear-gradient(135deg, #0d6efd, #6610f2);
 
-                radial-gradient(circle at bottom right,
-                rgba(212,175,55,0.08),
-                transparent 25%),
+            display: flex;
+            justify-content: center;
+            align-items: center;
 
-                #050505;
-
-            min-height:100vh;
-
-            font-family:'Poppins',sans-serif;
-
-            color:white;
-
-            display:flex;
-
-            justify-content:center;
-
-            align-items:center;
-
-            padding:40px;
+            font-family: 'Segoe UI', sans-serif;
         }
 
-        /* =========================================
-           CARD
-        ========================================= */
+        .login-card{
 
-        .edit-card{
+            width: 100%;
+            max-width: 420px;
 
-            width:100%;
-            max-width:700px;
+            background: white;
 
-            background:rgba(255,255,255,0.04);
+            border-radius: 20px;
 
-            backdrop-filter:blur(18px);
+            padding: 40px;
 
-            border-radius:28px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
 
-            border:1px solid rgba(255,255,255,0.08);
-
-            box-shadow:
-                0 15px 40px rgba(0,0,0,0.45);
-
-            padding:45px;
-
-            animation:fadeIn 0.8s ease;
+            animation: aparecer 0.7s ease;
         }
 
-        @keyframes fadeIn{
-
+        @keyframes aparecer{
             from{
-                opacity:0;
-                transform:translateY(20px);
+                opacity: 0;
+                transform: translateY(-20px);
             }
-
             to{
-                opacity:1;
-                transform:translateY(0);
+                opacity: 1;
+                transform: translateY(0);
             }
         }
 
-        /* =========================================
-           HEADER
-        ========================================= */
-
-        .header{
-
-            text-align:center;
-
-            margin-bottom:35px;
-        }
-
-        .logo-circle{
-
-            width:90px;
-            height:90px;
-
-            margin:auto;
-
-            border-radius:50%;
-
-            background:linear-gradient(
-                    135deg,
-                    #d4af37,
-                    #f5d76e
-            );
-
-            display:flex;
-
-            align-items:center;
-
-            justify-content:center;
-
-            margin-bottom:20px;
-
-            box-shadow:
-                0 10px 30px rgba(212,175,55,0.35);
-        }
-
-        .logo-circle i{
-
-            font-size:40px;
-
-            color:#111111;
+        .logo{
+            text-align: center;
+            font-size: 50px;
+            color: #0d6efd;
         }
 
         .titulo{
-
-            font-size:32px;
-
-            font-weight:700;
-
-            margin-bottom:8px;
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 30px;
+            color: #333;
         }
-
-        .subtitulo{
-
-            color:#9ca3af;
-
-            font-size:14px;
-
-            letter-spacing:1px;
-        }
-
-        /* =========================================
-           LABELS
-        ========================================= */
-
-        .form-label{
-
-            color:#e5e7eb;
-
-            margin-bottom:10px;
-
-            font-weight:500;
-        }
-
-        /* =========================================
-           INPUTS
-        ========================================= */
 
         .form-control{
 
-            height:55px;
+            height: 45px;
 
-            border-radius:16px;
-
-            background:#0f0f0f;
-
-            border:1px solid #2a2a2a;
-
-            color:white;
-
-            padding-left:18px;
+            border-radius: 10px;
         }
 
-        .form-control:focus{
+        .btn-login{
 
-            background:#111111;
+            height: 45px;
 
-            color:white;
+            border-radius: 10px;
 
-            border-color:#d4af37;
+            font-weight: bold;
 
-            box-shadow:
-                0 0 0 0.2rem rgba(212,175,55,0.15);
+            transition: 0.3s;
         }
 
-        .form-control:disabled{
+        .btn-login:hover{
 
-            background:#1a1a1a;
-
-            color:#9ca3af;
+            transform: scale(1.02);
         }
 
-        /* =========================================
-           BOTONES
-        ========================================= */
+        .input-group-text{
 
-        .btn{
-
-            height:55px;
-
-            border:none;
-
-            border-radius:16px;
-
-            font-weight:600;
-
-            transition:0.3s;
+            border-radius: 10px 0 0 10px;
         }
 
-        .btn-update{
+        .footer-text{
 
-            background:linear-gradient(
-                    135deg,
-                    #d4af37,
-                    #f5d76e
-            );
+            text-align: center;
 
-            color:#111111;
-        }
+            margin-top: 20px;
 
-        .btn-update:hover{
+            color: gray;
 
-            transform:translateY(-3px);
-
-            box-shadow:
-                0 10px 25px rgba(212,175,55,0.35);
-        }
-
-        .btn-back{
-
-            background:#1f2937;
-
-            color:white;
-        }
-
-        .btn-back:hover{
-
-            background:#374151;
-
-            color:white;
-        }
-
-        /* =========================================
-           FOOTER
-        ========================================= */
-
-        .footer{
-
-            text-align:center;
-
-            margin-top:25px;
-
-            color:#777777;
-
-            font-size:13px;
-        }
-
-        /* =========================================
-           RESPONSIVE
-        ========================================= */
-
-        @media(max-width:768px){
-
-            .edit-card{
-
-                padding:30px;
-            }
-
-            .titulo{
-
-                font-size:26px;
-            }
+            font-size: 14px;
         }
 
     </style>
-
 </head>
 
 <body>
 
-<%
+<div class="login-card">
 
-    // =========================================
-    // OBTENER GESTOR
-    // =========================================
-
-    GestorTickets gestor =
-            (GestorTickets) application.getAttribute("gestor");
-
-    // =========================================
-    // OBTENER ID
-    // =========================================
-
-    String id =
-            request.getParameter("id");
-
-    // =========================================
-    // BUSCAR TICKET
-    // =========================================
-
-    Ticket ticket =
-            gestor.buscarPorId(id);
-
-%>
-
-<!-- ========================================= -->
-<!-- CARD -->
-<!-- ========================================= -->
-
-<div class="edit-card">
-
-    <!-- HEADER -->
-
-    <div class="header">
-
-        <div class="logo-circle">
-
-            <i class="bi bi-pencil-square"></i>
-
-        </div>
-
-        <div class="titulo">
-
-            Editar Ticket
-
-        </div>
-
-        <div class="subtitulo">
-
-            SKYMANAGER PREMIUM FLIGHT SYSTEM
-
-        </div>
-
+    <!-- LOGO -->
+    <div class="logo">
+        <i class="bi bi-airplane-engines-fill"></i>
     </div>
 
+    <h2 class="titulo">SistemaVuelos</h2>
+
+    <!-- ERROR -->
+    <%
+        String error = request.getParameter("error");
+
+        if ("1".equals(error)) {
+    %>
+
+        <div class="alert alert-danger text-center">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+            Usuario o contraseña incorrectos
+        </div>
+
+    <%
+        }
+    %>
+
     <!-- FORMULARIO -->
+    <form action="../login" method="post">
 
-    <form action="${pageContext.request.contextPath}/tickets"
-          method="post">
+        <!-- USUARIO -->
+        <div class="mb-3">
 
-        <!-- ACCION -->
+            <label class="form-label">Usuario</label>
 
-        <input type="hidden"
-               name="accion"
-               value="editar">
+            <div class="input-group">
 
-        <!-- ID -->
+                <span class="input-group-text">
+                    <i class="bi bi-person-fill"></i>
+                </span>
 
-        <input type="hidden"
-               name="id"
-               value="<%= ticket.getId() %>">
+                <input
+                    type="text"
+                    class="form-control"
+                    name="usuario"
+                    placeholder="Ingrese usuario"
+                    required>
 
-        <!-- ID VISUAL -->
+            </div>
 
-        <div class="mb-4">
+        </div>
 
-            <label class="form-label">
+        <!-- PASSWORD -->
+        <div class="mb-3">
 
-                ID DEL TICKET
+            <label class="form-label">Contraseña</label>
 
+            <div class="input-group">
+
+                <span class="input-group-text">
+                    <i class="bi bi-lock-fill"></i>
+                </span>
+
+                <input
+                    type="password"
+                    class="form-control"
+                    id="password"
+                    name="password"
+                    placeholder="Ingrese contraseña"
+                    required>
+
+            </div>
+
+        </div>
+
+        <!-- MOSTRAR PASSWORD -->
+        <div class="form-check mb-3">
+
+            <input
+                class="form-check-input"
+                type="checkbox"
+                onclick="mostrarPassword()">
+
+            <label class="form-check-label">
+                Mostrar contraseña
             </label>
 
-            <input type="text"
-                   class="form-control"
-                   value="<%= ticket.getId() %>"
-                   disabled>
-
         </div>
 
-        <!-- PASAJERO -->
+        <!-- BOTON -->
+        <button class="btn btn-primary w-100 btn-login">
 
-        <div class="mb-4">
+            <i class="bi bi-box-arrow-in-right"></i>
+            Ingresar
 
-            <label class="form-label">
-
-                PASAJERO
-
-            </label>
-
-            <input type="text"
-                   class="form-control"
-                   name="pasajero"
-                   value="<%= ticket.getPasajero() %>"
-                   required>
-
-        </div>
-
-        <!-- ORIGEN -->
-
-        <div class="mb-4">
-
-            <label class="form-label">
-
-                ORIGEN
-
-            </label>
-
-            <input type="text"
-                   class="form-control"
-                   name="origen"
-                   value="<%= ticket.getOrigen() %>"
-                   required>
-
-        </div>
-
-        <!-- DESTINO -->
-
-        <div class="mb-5">
-
-            <label class="form-label">
-
-                DESTINO
-
-            </label>
-
-            <input type="text"
-                   class="form-control"
-                   name="destino"
-                   value="<%= ticket.getDestino() %>"
-                   required>
-
-        </div>
-
-        <!-- BOTONES -->
-
-        <div class="d-flex gap-3">
-
-            <!-- ACTUALIZAR -->
-
-            <button type="submit"
-                    class="btn btn-update w-100">
-
-                <i class="bi bi-check-circle-fill"></i>
-
-                Actualizar Ticket
-
-            </button>
-
-            <!-- VOLVER -->
-
-            <a href="${pageContext.request.contextPath}/tickets"
-               class="btn btn-back w-100 d-flex align-items-center justify-content-center">
-
-                <i class="bi bi-arrow-left-circle-fill me-2"></i>
-
-                Volver
-
-            </a>
-
-        </div>
+        </button>
 
     </form>
 
-    <!-- FOOTER -->
-
-    <div class="footer">
-
-        © 2026 SkyManager · Sistema Premium
-
+    <div class="footer-text">
+        ✈ Sistema de Gestión de Vuelos
     </div>
 
 </div>
+
+<script>
+
+    function mostrarPassword(){
+
+        let password =
+                document.getElementById("password");
+
+        if(password.type === "password"){
+
+            password.type = "text";
+
+        }else{
+
+            password.type = "password";
+        }
+    }
+
+</script>
 
 </body>
 </html>

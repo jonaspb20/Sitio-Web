@@ -1,71 +1,23 @@
 package servlet;
 
-import java.io.IOException;
-
-import javax.servlet.ServletException;
-
+import java.io.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
 import javax.servlet.annotation.WebServlet;
 
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
-@WebServlet("/LoginServlet")
-
+@WebServlet("/login")
 public class LoginServlet extends HttpServlet {
 
-    @Override
-    protected void doPost(HttpServletRequest request,
-                          HttpServletResponse response)
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
-        String usuario =
-                request.getParameter("usuario");
+        String u = req.getParameter("usuario");
+        String p = req.getParameter("password");
 
-        String password =
-                request.getParameter("password");
-
-        // VALIDACION SIMPLE
-
-        if(usuario.equals("admin")
-                && password.equals("123")){
-
-            // CREAR SESION
-
-            HttpSession sesion =
-                    request.getSession();
-
-            sesion.setAttribute("usuario", usuario);
-
-            // REDIRECCION
-
-            response.sendRedirect(
-                    "views/dashboard.jsp"
-            );
-
-        }else{
-
-            // ERROR LOGIN
-
-            request.setAttribute(
-                    "error",
-                    "Usuario o contraseña incorrectos"
-            );
-
-            request.getRequestDispatcher(
-                    "views/login.jsp"
-            ).forward(request,response);
+        if (u.equals("admin") && p.equals("123")) {
+            resp.sendRedirect("views/menu.jsp");
+        } else {
+            resp.sendRedirect("views/login.jsp?error=1"); // 🔥 CORREGIDO
         }
-    }
-
-    @Override
-    protected void doGet(HttpServletRequest request,
-                         HttpServletResponse response)
-            throws ServletException, IOException {
-
-        response.sendRedirect(
-                "views/login.jsp"
-        );
     }
 }

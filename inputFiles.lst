@@ -3,547 +3,243 @@
 <%@ page import="estructura.NodoDoble" %>
 
 <!DOCTYPE html>
-<html lang="es">
+<html>
 
 <head>
 
-    <meta charset="UTF-8">
+    <title>Sistema de Tickets Aéreos</title>
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-
-    <title>Recorrido Inverso</title>
-
-    <!-- GOOGLE FONTS -->
-
-    <link rel="preconnect"
-          href="https://fonts.googleapis.com">
-
-    <link rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossorigin>
-
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
-          rel="stylesheet">
-
+    <!-- ===================================================== -->
     <!-- BOOTSTRAP -->
+    <!-- ===================================================== -->
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
           rel="stylesheet">
 
-    <!-- ICONOS -->
-
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
-<style>
+    <!-- ===================================================== -->
+    <!-- ESTILOS -->
+    <!-- ===================================================== -->
 
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
+    <style>
 
-body{
+        /* =====================================================
+           BODY
+        ===================================================== */
 
-    background:#0a0a0a;
+        body{
+            background-color:#eef2f7;
+            font-family:Arial, Helvetica, sans-serif;
+        }
 
-    font-family:'Poppins',sans-serif;
+        /* =====================================================
+           SIDEBAR
+        ===================================================== */
 
-    color:#f5f5f5;
+        .sidebar{
 
-    overflow-x:hidden;
-}
+            position:fixed;
+            top:0;
+            left:0;
 
-/* ====================================
-   SCROLLBAR
-==================================== */
+            width:250px;
+            height:100vh;
 
-::-webkit-scrollbar{
-    width:10px;
-}
+            background:#0f172a;
 
-::-webkit-scrollbar-track{
-    background:#111111;
-}
+            padding-top:20px;
 
-::-webkit-scrollbar-thumb{
-    background:#2a2a2a;
-    border-radius:10px;
-}
+            box-shadow:2px 0 10px rgba(0,0,0,0.1);
 
-/* ====================================
-   SIDEBAR
-==================================== */
+            z-index:1000;
+        }
 
-.sidebar{
+        .sidebar h3{
 
-    position:fixed;
+            color:white;
+            text-align:center;
+            margin-bottom:35px;
+            font-weight:bold;
+        }
 
-    top:0;
-    left:0;
+        .sidebar a{
 
-    width:270px;
+            display:block;
 
-    height:100vh;
+            color:#cbd5e1;
 
-    background:linear-gradient(
-            180deg,
-            #111111,
-            #181818
-    );
+            padding:15px 25px;
 
-    padding-top:30px;
+            text-decoration:none;
 
-    border-right:1px solid #2a2a2a;
+            transition:0.3s;
+        }
 
-    box-shadow:4px 0 30px rgba(0,0,0,0.45);
+        .sidebar a:hover{
 
-    z-index:1000;
-}
+            background:#1e293b;
+            color:white;
+        }
 
-.logo-area{
+        /* =====================================================
+           CONTENIDO PRINCIPAL
+        ===================================================== */
 
-    text-align:center;
+        .main-content{
 
-    margin-bottom:45px;
-}
+            margin-left:260px;
+            padding:30px;
+        }
 
-.logo-circle{
+        /* =====================================================
+           TOPBAR
+        ===================================================== */
 
-    width:90px;
-    height:90px;
+        .topbar{
 
-    margin:auto;
+            background:white;
 
-    border-radius:50%;
+            padding:20px;
 
-    background:linear-gradient(
-            135deg,
-            #d4af37,
-            #f5d76e
-    );
+            border-radius:15px;
 
-    display:flex;
+            box-shadow:0 2px 10px rgba(0,0,0,0.08);
 
-    align-items:center;
+            margin-bottom:30px;
+        }
 
-    justify-content:center;
+        /* =====================================================
+           TITULOS
+        ===================================================== */
 
-    margin-bottom:18px;
+        .titulo{
 
-    box-shadow:0 10px 30px rgba(212,175,55,0.35);
-}
+            font-weight:bold;
+            color:#0f172a;
+        }
 
-.logo-circle i{
+        .subtitulo{
 
-    font-size:40px;
+            color:#64748b;
+        }
 
-    color:#111111;
-}
+        /* =====================================================
+           CARDS
+        ===================================================== */
 
-.logo-area h3{
+        .card{
 
-    color:#f5f5f5;
+            border:none;
+            border-radius:18px;
 
-    font-weight:600;
+            box-shadow:0 2px 10px rgba(0,0,0,0.08);
+        }
 
-    margin-bottom:5px;
-}
+        /* =====================================================
+           TABLAS
+        ===================================================== */
 
-.logo-area small{
+        .table thead{
 
-    color:#9ca3af;
+            background:#0f172a;
+            color:white;
+        }
 
-    letter-spacing:1px;
+        .table th{
 
-    font-size:12px;
-}
+            text-align:center;
+            vertical-align:middle;
+        }
 
-/* ====================================
-   MENU
-==================================== */
+        .table td{
 
-.sidebar a{
+            vertical-align:middle;
+        }
 
-    display:flex;
+        /* =====================================================
+           BOTONES
+        ===================================================== */
 
-    align-items:center;
+        .btn{
 
-    gap:14px;
+            border-radius:10px;
+        }
 
-    color:#b0b0b0;
+        /* =====================================================
+           RECORRIDO VISUAL
+        ===================================================== */
 
-    padding:16px 28px;
+        .nodo-card{
 
-    text-decoration:none;
+            border-left:5px solid #0d6efd;
+        }
 
-    transition:0.3s;
-
-    font-weight:500;
-
-    border-left:3px solid transparent;
-}
-
-.sidebar a:hover{
-
-    background:#1f1f1f;
-
-    color:#d4af37;
-
-    border-left:3px solid #d4af37;
-
-    padding-left:35px;
-}
-
-.sidebar .active{
-
-    background:#1f1f1f;
-
-    color:#d4af37;
-
-    border-left:3px solid #d4af37;
-}
-
-/* ====================================
-   MAIN
-==================================== */
-
-.main-content{
-
-    margin-left:290px;
-
-    padding:35px;
-}
-
-/* ====================================
-   TOPBAR
-==================================== */
-
-.topbar{
-
-    background:rgba(255,255,255,0.04);
-
-    backdrop-filter:blur(14px);
-
-    padding:28px;
-
-    border-radius:24px;
-
-    border:1px solid rgba(255,255,255,0.06);
-
-    box-shadow:0 10px 35px rgba(0,0,0,0.35);
-
-    margin-bottom:35px;
-}
-
-.titulo{
-
-    font-weight:700;
-
-    color:#f5f5f5;
-}
-
-.subtitulo{
-
-    color:#9ca3af;
-}
-
-/* ====================================
-   INFO PANEL
-==================================== */
-
-.info-panel{
-
-    background:rgba(255,255,255,0.04);
-
-    backdrop-filter:blur(12px);
-
-    border-radius:24px;
-
-    padding:30px;
-
-    border:1px solid rgba(255,255,255,0.05);
-
-    box-shadow:0 10px 35px rgba(0,0,0,0.35);
-
-    margin-bottom:35px;
-}
-
-.info-box{
-
-    text-align:center;
-}
-
-.info-box i{
-
-    font-size:35px;
-
-    color:#d4af37;
-
-    margin-bottom:15px;
-}
-
-.info-box h5{
-
-    font-weight:600;
-
-    margin-bottom:10px;
-}
-
-.info-box p{
-
-    color:#9ca3af;
-
-    font-size:14px;
-}
-
-/* ====================================
-   TIMELINE
-==================================== */
-
-.timeline{
-
-    position:relative;
-
-    margin-top:50px;
-}
-
-.timeline::before{
-
-    content:"";
-
-    position:absolute;
-
-    left:35px;
-
-    top:0;
-
-    width:4px;
-
-    height:100%;
-
-    background:linear-gradient(
-            180deg,
-            #d4af37,
-            #f5d76e
-    );
-
-    border-radius:10px;
-}
-
-.timeline-item{
-
-    position:relative;
-
-    margin-bottom:40px;
-
-    padding-left:100px;
-}
-
-.timeline-icon{
-
-    position:absolute;
-
-    left:12px;
-
-    top:5px;
-
-    width:50px;
-
-    height:50px;
-
-    border-radius:50%;
-
-    background:linear-gradient(
-            135deg,
-            #d4af37,
-            #f5d76e
-    );
-
-    color:#111111;
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:center;
-
-    font-weight:bold;
-
-    font-size:18px;
-
-    z-index:10;
-
-    box-shadow:0 8px 20px rgba(212,175,55,0.3);
-}
-
-/* ====================================
-   CARDS
-==================================== */
-
-.timeline-card{
-
-    background:rgba(255,255,255,0.04);
-
-    backdrop-filter:blur(12px);
-
-    border-radius:24px;
-
-    padding:28px;
-
-    border:1px solid rgba(255,255,255,0.05);
-
-    box-shadow:0 10px 35px rgba(0,0,0,0.35);
-
-    transition:0.35s;
-}
-
-.timeline-card:hover{
-
-    transform:translateY(-5px);
-
-    border:1px solid rgba(212,175,55,0.18);
-}
-
-.ticket-title{
-
-    color:#d4af37;
-
-    font-weight:700;
-}
-
-.label{
-
-    color:#9ca3af;
-
-    font-size:14px;
-}
-
-.value{
-
-    font-weight:600;
-
-    font-size:17px;
-}
-
-/* ====================================
-   BADGE
-==================================== */
-
-.badge-custom{
-
-    background:#111111;
-
-    color:#d4af37;
-
-    padding:10px 15px;
-
-    border-radius:12px;
-
-    border:1px solid rgba(212,175,55,0.2);
-}
-
-/* ====================================
-   EMPTY
-==================================== */
-
-.empty-card{
-
-    background:rgba(255,255,255,0.04);
-
-    border-radius:24px;
-
-    padding:40px;
-
-    text-align:center;
-
-    border:1px solid rgba(255,255,255,0.05);
-}
-
-.empty-card i{
-
-    font-size:60px;
-
-    color:#d4af37;
-
-    margin-bottom:20px;
-}
-
-/* ====================================
-   RESPONSIVE
-==================================== */
-
-@media(max-width:991px){
-
-    .sidebar{
-
-        position:relative;
-
-        width:100%;
-
-        height:auto;
-    }
-
-    .main-content{
-
-        margin-left:0;
-    }
-
-    .timeline::before{
-
-        left:20px;
-    }
-
-    .timeline-item{
-
-        padding-left:70px;
-    }
-
-    .timeline-icon{
-
-        left:0;
-    }
-}
-
-</style>
+    </style>
 
 </head>
 
 <body>
 
 <%
-
     GestorTickets gestor =
             (GestorTickets) application.getAttribute("gestor");
 
+    String msg =
+            request.getParameter("msg");
+
+    // =====================================================
+    // VARIABLES DASHBOARD
+    // =====================================================
+
+    int totalTickets = 0;
+
+    String primerTicket = "Sin registros";
+
+    String ultimoTicket = "Sin registros";
+
+    boolean listaVacia = true;
+
+    if (gestor != null &&
+        gestor.getLista() != null) {
+
+        totalTickets =
+                gestor.totalTickets();
+
+        listaVacia =
+                gestor.getLista().estaVacia();
+
+        if (!listaVacia) {
+
+            primerTicket =
+                    gestor.getLista()
+                          .obtenerPrimerTicket()
+                          .getId();
+
+            ultimoTicket =
+                    gestor.getLista()
+                          .obtenerUltimoTicket()
+                          .getId();
+        }
+    }
 %>
 
-<!-- ====================================
-     SIDEBAR
-==================================== -->
+<!-- ===================================================== -->
+<!-- SIDEBAR -->
+<!-- ===================================================== -->
 
 <div class="sidebar">
 
-    <div class="logo-area">
+    <h3>
 
-        <div class="logo-circle">
+        <i class="bi bi-airplane-fill"></i>
 
-            <i class="bi bi-airplane-fill"></i>
+        Tickets
 
-        </div>
+    </h3>
 
-        <h3>
-            SkyManager
-        </h3>
-
-        <small>
-            PREMIUM FLIGHT SYSTEM
-        </small>
-
-    </div>
-
-    <a href="${pageContext.request.contextPath}/views/dashboard.jsp">
+    <a href="${pageContext.request.contextPath}/tickets">
 
         <i class="bi bi-speedometer2"></i>
 
@@ -551,16 +247,23 @@ body{
 
     </a>
 
-    <a href="${pageContext.request.contextPath}/tickets">
+    <a href="#formulario">
 
-        <i class="bi bi-ticket-detailed-fill"></i>
+        <i class="bi bi-plus-circle"></i>
 
-        Gestión Tickets
+        Registrar Ticket
 
     </a>
 
-    <a href="${pageContext.request.contextPath}/views/recorridoInverso.jsp"
-       class="active">
+    <a href="#tabla">
+
+        <i class="bi bi-table"></i>
+
+        Lista Tickets
+
+    </a>
+
+    <a href="#recorrido">
 
         <i class="bi bi-arrow-left-right"></i>
 
@@ -578,27 +281,29 @@ body{
 
 </div>
 
-<!-- ====================================
-     MAIN
-==================================== -->
+<!-- ===================================================== -->
+<!-- CONTENIDO PRINCIPAL -->
+<!-- ===================================================== -->
 
 <div class="main-content">
 
+    <!-- ===================================================== -->
     <!-- TOPBAR -->
+    <!-- ===================================================== -->
 
     <div class="topbar d-flex justify-content-between align-items-center">
 
         <div>
 
-            <h3 class="titulo mb-1">
+            <h3 class="titulo mb-0">
 
-                Recorrido Inverso
+                Sistema de Tickets Aéreos
 
             </h3>
 
-            <small class="subtitulo">
+            <small class="text-muted">
 
-                Visualización desde cola hasta cabeza
+                Gestión mediante lista doblemente enlazada
 
             </small>
 
@@ -608,9 +313,9 @@ body{
 
             <span class="badge bg-primary p-3">
 
-                <i class="bi bi-diagram-3-fill"></i>
+                <i class="bi bi-database-fill"></i>
 
-                Lista Doble
+                Persistencia TXT
 
             </span>
 
@@ -618,84 +323,126 @@ body{
 
     </div>
 
+    <!-- ===================================================== -->
     <!-- TITULO -->
+    <!-- ===================================================== -->
 
-    <div class="mb-5">
+    <div class="text-center mb-4">
 
-        <h1 class="titulo display-5 mb-3">
+        <h1 class="titulo display-5">
 
-            Línea Temporal Inversa
+            Gestión Inteligente de Tickets
 
         </h1>
 
         <p class="subtitulo">
 
-            Recorrido de nodos utilizando el puntero
-            <strong>anterior</strong>
-            desde la cola hasta la cabeza
-            de la lista doblemente enlazada.
+            Administración completa de tickets,
+            persistencia TXT y recorrido bidireccional.
 
         </p>
 
     </div>
 
-    <!-- INFO PANEL -->
+    <!-- ===================================================== -->
+    <!-- DASHBOARD -->
+    <!-- ===================================================== -->
 
-    <div class="info-panel">
+    <div class="row mb-4">
 
-        <div class="row">
+        <!-- TOTAL -->
+        <div class="col-md-3">
 
-            <div class="col-md-4 mb-4">
+            <div class="card p-4">
 
-                <div class="info-box">
+                <h6 class="text-muted">
 
-                    <i class="bi bi-diagram-3-fill"></i>
+                    Total Tickets
 
-                    <h5>
-                        Estructura
-                    </h5>
+                </h6>
 
-                    <p>
-                        Lista doblemente enlazada
-                    </p>
+                <h2 class="fw-bold text-primary">
 
-                </div>
+                    <%= totalTickets %>
 
-            </div>
-
-            <div class="col-md-4 mb-4">
-
-                <div class="info-box">
-
-                    <i class="bi bi-arrow-counterclockwise"></i>
-
-                    <h5>
-                        Recorrido
-                    </h5>
-
-                    <p>
-                        Desde cola hacia cabeza
-                    </p>
-
-                </div>
+                </h2>
 
             </div>
 
-            <div class="col-md-4 mb-4">
+        </div>
 
-                <div class="info-box">
+        <!-- PRIMER -->
+        <div class="col-md-3">
 
-                    <i class="bi bi-code-slash"></i>
+            <div class="card p-4">
 
-                    <h5>
-                        Implementación
-                    </h5>
+                <h6 class="text-muted">
 
-                    <p>
-                        Uso del puntero anterior
-                    </p>
+                    Primer Ticket
 
-                </div>
+                </h6>
+
+                <h5 class="fw-bold">
+
+                    <%= primerTicket %>
+
+                </h5>
+
+            </div>
+
+        </div>
+
+        <!-- ULTIMO -->
+        <div class="col-md-3">
+
+            <div class="card p-4">
+
+                <h6 class="text-muted">
+
+                    Último Ticket
+
+                </h6>
+
+                <h5 class="fw-bold">
+
+                    <%= ultimoTicket %>
+
+                </h5>
+
+            </div>
+
+        </div>
+
+        <!-- ESTADO -->
+        <div class="col-md-3">
+
+            <div class="card p-4">
+
+                <h6 class="text-muted">
+
+                    Estado Lista
+
+                </h6>
+
+                <h5 class="fw-bold">
+
+                    <%
+                        if(listaVacia){
+                    %>
+
+                        Vacía
+
+                    <%
+                        } else {
+                    %>
+
+                        Activa
+
+                    <%
+                        }
+                    %>
+
+                </h5>
 
             </div>
 
@@ -703,156 +450,517 @@ body{
 
     </div>
 
-    <!-- TIMELINE -->
-
-    <div class="timeline">
+    <!-- ===================================================== -->
+    <!-- ALERTAS -->
+    <!-- ===================================================== -->
 
     <%
-
-        if (gestor != null &&
-            gestor.getLista() != null &&
-            gestor.getLista().getCola() != null) {
-
-            NodoDoble actual =
-                    gestor.getLista().getCola();
-
-            int contador = 1;
-
-            while(actual != null){
-
+        if ("agregado".equals(msg)) {
     %>
 
-        <!-- ITEM -->
+        <div class="alert alert-success alert-dismissible fade show">
 
-        <div class="timeline-item">
+            Ticket agregado correctamente.
 
-            <!-- ICONO -->
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert">
+            </button>
 
-            <div class="timeline-icon">
+        </div>
 
-                <%= contador %>
+    <%
+        } else if ("editado".equals(msg)) {
+    %>
 
-            </div>
+        <div class="alert alert-warning alert-dismissible fade show">
 
-            <!-- CARD -->
+            Ticket editado correctamente.
 
-            <div class="timeline-card">
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert">
+            </button>
 
-                <div class="d-flex justify-content-between align-items-center mb-4">
+        </div>
 
-                    <h4 class="ticket-title mb-0">
+    <%
+        } else if ("eliminado".equals(msg)) {
+    %>
 
-                        Ticket:
-                        <%= actual.dato.getId() %>
+        <div class="alert alert-danger alert-dismissible fade show">
 
-                    </h4>
+            Ticket eliminado correctamente.
 
-                    <span class="badge-custom">
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert">
+            </button>
 
-                        Nodo Inverso
+        </div>
 
-                    </span>
+    <%
+        }
+    %>
+
+    <!-- ===================================================== -->
+    <!-- FORMULARIO -->
+    <!-- ===================================================== -->
+
+    <div class="card p-4 mb-4"
+         id="formulario">
+
+        <h4 class="mb-4">
+
+            Registrar Ticket
+
+        </h4>
+
+        <form action="${pageContext.request.contextPath}/tickets"
+              method="post">
+
+            <input type="hidden"
+                   name="accion"
+                   value="agregar">
+
+            <div class="row mb-3">
+
+                <div class="col-md-6">
+
+                    <label class="form-label">
+
+                        ID
+
+                    </label>
+
+                    <input type="text"
+                           class="form-control"
+                           name="id"
+                           required>
 
                 </div>
 
-                <div class="row">
+                <div class="col-md-6">
 
-                    <div class="col-md-4 mb-3">
+                    <label class="form-label">
 
-                        <div class="label">
+                        Pasajero
 
-                            Pasajero
+                    </label>
 
-                        </div>
+                    <input type="text"
+                           class="form-control"
+                           name="pasajero"
+                           required>
 
-                        <div class="value">
+                </div>
+
+            </div>
+
+            <div class="row mb-4">
+
+                <div class="col-md-6">
+
+                    <label class="form-label">
+
+                        Origen
+
+                    </label>
+
+                    <input type="text"
+                           class="form-control"
+                           name="origen"
+                           required>
+
+                </div>
+
+                <div class="col-md-6">
+
+                    <label class="form-label">
+
+                        Destino
+
+                    </label>
+
+                    <input type="text"
+                           class="form-control"
+                           name="destino"
+                           required>
+
+                </div>
+
+            </div>
+
+            <button type="submit"
+                    class="btn btn-primary btn-lg w-100">
+
+                <i class="bi bi-save"></i>
+
+                Guardar Ticket
+
+            </button>
+
+        </form>
+
+    </div>
+
+    <!-- ===================================================== -->
+    <!-- TABLA -->
+    <!-- ===================================================== -->
+
+    <div class="card p-4 mb-4"
+         id="tabla">
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+
+            <h4>
+
+                Lista de Tickets
+
+            </h4>
+
+            <input type="text"
+                   id="buscadorTickets"
+                   class="form-control"
+                   placeholder="Buscar ticket..."
+                   style="max-width:300px;">
+
+        </div>
+
+        <div class="table-responsive">
+
+            <table class="table table-hover table-bordered">
+
+                <thead>
+
+                    <tr>
+
+                        <th>ID</th>
+                        <th>Pasajero</th>
+                        <th>Origen</th>
+                        <th>Destino</th>
+                        <th width="220">Acciones</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody id="tablaTickets">
+
+                <%
+                    if (gestor != null &&
+                        gestor.getLista() != null &&
+                        gestor.getLista().getCabeza() != null) {
+
+                        NodoDoble actual =
+                                gestor.getLista().getCabeza();
+
+                        while(actual != null){
+                %>
+
+                    <tr>
+
+                        <td>
+                            <%= actual.dato.getId() %>
+                        </td>
+
+                        <td>
+                            <%= actual.dato.getPasajero() %>
+                        </td>
+
+                        <td>
+                            <%= actual.dato.getOrigen() %>
+                        </td>
+
+                        <td>
+                            <%= actual.dato.getDestino() %>
+                        </td>
+
+                        <td>
+
+                            <div class="d-flex gap-2 justify-content-center">
+
+                                <!-- EDITAR -->
+
+                                <form action="${pageContext.request.contextPath}/views/editarTicket.jsp"
+                                      method="get">
+
+                                    <input type="hidden"
+                                           name="id"
+                                           value="<%= actual.dato.getId() %>">
+
+                                    <button type="submit"
+                                            class="btn btn-warning btn-sm">
+
+                                        <i class="bi bi-pencil-square"></i>
+
+                                        Editar
+
+                                    </button>
+
+                                </form>
+
+                                <!-- ELIMINAR -->
+
+                                <form action="${pageContext.request.contextPath}/tickets"
+                                      method="post">
+
+                                    <input type="hidden"
+                                           name="accion"
+                                           value="eliminar">
+
+                                    <input type="hidden"
+                                           name="id"
+                                           value="<%= actual.dato.getId() %>">
+
+                                    <button type="submit"
+                                            class="btn btn-danger btn-sm"
+                                            onclick="return confirmarEliminacion()">
+
+                                        <i class="bi bi-trash"></i>
+
+                                        Eliminar
+
+                                    </button>
+
+                                </form>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                <%
+                            actual = actual.siguiente;
+                        }
+
+                    } else {
+                %>
+
+                    <tr>
+
+                        <td colspan="5"
+                            class="text-center text-muted">
+
+                            No existen tickets registrados.
+
+                        </td>
+
+                    </tr>
+
+                <%
+                    }
+                %>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+    <!-- ===================================================== -->
+    <!-- DESCARGA -->
+    <!-- ===================================================== -->
+
+    <div class="card p-4 mb-4">
+
+        <h4 class="mb-3">
+
+            Persistencia TXT
+
+        </h4>
+
+        <p class="text-muted">
+
+            Descarga el archivo de respaldo del sistema.
+
+        </p>
+
+        <a href="${pageContext.request.contextPath}/descargar"
+           class="btn btn-success">
+
+            <i class="bi bi-download"></i>
+
+            Descargar tickets.txt
+
+        </a>
+
+    </div>
+
+    <!-- ===================================================== -->
+    <!-- RECORRIDO INVERSO -->
+    <!-- ===================================================== -->
+
+    <div class="card p-4"
+         id="recorrido">
+
+        <h4 class="mb-3">
+
+            Recorrido Inverso
+
+        </h4>
+
+        <p class="text-muted">
+
+            Visualización desde la cola hasta la cabeza
+            de la lista doblemente enlazada.
+
+        </p>
+
+        <div class="text-center">
+
+            <span class="badge bg-dark p-2 mb-3">
+
+                COLA
+
+            </span>
+
+            <%
+                if (gestor != null &&
+                    gestor.getLista() != null &&
+                    gestor.getLista().getCola() != null) {
+
+                    NodoDoble actual =
+                            gestor.getLista().getCola();
+
+                    while(actual != null){
+            %>
+
+                <div class="card nodo-card mx-auto mb-3"
+                     style="max-width:400px;">
+
+                    <div class="card-body">
+
+                        <h5 class="text-primary">
+
+                            Ticket:
+                            <%= actual.dato.getId() %>
+
+                        </h5>
+
+                        <p class="mb-1">
+
+                            <strong>Pasajero:</strong>
 
                             <%= actual.dato.getPasajero() %>
 
-                        </div>
+                        </p>
 
-                    </div>
+                        <p class="mb-1">
 
-                    <div class="col-md-4 mb-3">
-
-                        <div class="label">
-
-                            Origen
-
-                        </div>
-
-                        <div class="value">
+                            <strong>Origen:</strong>
 
                             <%= actual.dato.getOrigen() %>
 
-                        </div>
+                        </p>
 
-                    </div>
+                        <p class="mb-0">
 
-                    <div class="col-md-4 mb-3">
-
-                        <div class="label">
-
-                            Destino
-
-                        </div>
-
-                        <div class="value">
+                            <strong>Destino:</strong>
 
                             <%= actual.dato.getDestino() %>
 
-                        </div>
+                        </p>
 
                     </div>
 
                 </div>
 
-            </div>
+                <div class="fs-4 mb-2">
+                    ↑
+                </div>
+
+            <%
+                        actual = actual.anterior;
+                    }
+
+                } else {
+            %>
+
+                <div class="alert alert-secondary">
+
+                    No existen tickets registrados.
+
+                </div>
+
+            <%
+                }
+            %>
+
+            <span class="badge bg-primary p-2">
+
+                CABEZA
+
+            </span>
 
         </div>
-
-    <%
-
-                actual = actual.anterior;
-
-                contador++;
-            }
-
-        } else {
-
-    %>
-
-        <!-- EMPTY -->
-
-        <div class="empty-card">
-
-            <i class="bi bi-exclamation-circle-fill"></i>
-
-            <h3 class="mb-3">
-
-                No existen tickets registrados
-
-            </h3>
-
-            <p class="text-muted">
-
-                Actualmente no hay información
-                disponible para realizar
-                el recorrido inverso.
-
-            </p>
-
-        </div>
-
-    <%
-
-        }
-
-    %>
 
     </div>
 
 </div>
+
+<!-- ===================================================== -->
+<!-- BOOTSTRAP JS -->
+<!-- ===================================================== -->
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- ===================================================== -->
+<!-- SCRIPTS -->
+<!-- ===================================================== -->
+
+<script>
+
+    // =====================================================
+    // BUSCADOR DINÁMICO
+    // =====================================================
+
+    const buscador =
+            document.getElementById("buscadorTickets");
+
+    buscador.addEventListener("keyup", function () {
+
+        let filtro =
+                buscador.value.toLowerCase();
+
+        let filas =
+                document.querySelectorAll(
+                        "#tablaTickets tr"
+                );
+
+        filas.forEach(function(fila){
+
+            let texto =
+                    fila.textContent.toLowerCase();
+
+            if(texto.includes(filtro)){
+
+                fila.style.display = "";
+
+            } else {
+
+                fila.style.display = "none";
+            }
+
+        });
+
+    });
+
+    // =====================================================
+    // CONFIRMAR ELIMINACIÓN
+    // =====================================================
+
+    function confirmarEliminacion(){
+
+        return confirm(
+                "¿Desea eliminar este ticket?"
+        );
+    }
+
+</script>
 
 </body>
 </html>
